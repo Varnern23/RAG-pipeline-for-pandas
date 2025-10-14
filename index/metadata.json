@@ -1,0 +1,5 @@
+{
+  "model": "qwen3-embedding:0.6b",
+  "dimension": 1024,
+  "normalized": true
+}

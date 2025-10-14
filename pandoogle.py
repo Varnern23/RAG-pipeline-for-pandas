@@ -4,6 +4,7 @@ import json
 from ollama import embed
 import csv
 import os
+import ollama
 
 
 json_file_path = "/home/nathan.varner/Documents/dsc360/lab04/pandas_help_corpus.json"
@@ -22,7 +23,7 @@ def buildIndex(model):
         embeddings = embeddings / np.linalg.norm(embeddings, axis = 1, keepdims = True)
         np.save("index/embeddings.npy", embeddings)
         metadata = {
-        "model": modelQ,
+        "model": model,
         "dimension": embeddings.shape[1],
         "normalized": True
         }
@@ -41,7 +42,7 @@ def search(query: str) -> str:
     scores = np.dot(embeddings, qVector)
     topK = np.argsort(scores)[-k:][::-1]
     answer = chunks[topK[0]]["doc"]
-    print(f"Answer: {answer}\n")
+    #print(f"Answer: {answer}\n")
     return query + "||helpful info: " + answer
 def query_ollama(prompt: str, model: str) -> str:
     """Call Ollama with the user prompt and return the reply text."""
@@ -58,10 +59,10 @@ def query_ollama(prompt: str, model: str) -> str:
     except ollama.ResponseError as e:
         print("Error: ", e.error)
 def main():
-    modelE = "qwen3-embedding:8b"
+    modelE = "qwen3-embedding:0.6b"
     modelG = "gemma3:1b"
     query = input("Enter your query here: ")
-    buildIndex(modelE)
+    #buildIndex(modelE)
     query_ollama(search(query), modelG)
 if __name__ == "__main__":
     main()
