@@ -6,7 +6,7 @@ import csv
 import os
 import ollama
 
-
+#just change file path to whatever you are trying to embed
 json_file_path = "/home/nathan.varner/Downloads/RAG-pipeline-for-pandas-main/pandas_help_corpus.json"
 def buildIndex(model):
     embeddings = []
@@ -43,6 +43,7 @@ def search(query: str) -> str:
     qVector /= np.linalg.norm(qVector)
     scores = np.dot(embeddings, qVector)
     topK = np.argsort(scores)[-k:][::-1]
+    # I am aware this may be the laziest thing I have ever done but we running with it
     if scores[topK[0]] >= similarityThreshhold:
         answer += chunks[topK[0]]["doc"]
         if scores[topK[1]] >=similarityThreshhold:
