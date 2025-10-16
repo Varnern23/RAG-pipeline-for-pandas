@@ -1,0 +1,10 @@
+“Group by department and calculate mean salary.”
+“Filter rows where age > 30 and city == 'New York'.”
+“Convert 'date' column to datetime and extract the year.”
+“Set multi-index using ['region', 'store_id'].”
+“Add a new column that's the ratio of sales to cost.”
+“Rename columns: 'fname' → 'first_name', 'lname' → 'last_name'.”
+“Resample time series by month and take the max temperature.”
+“Save DataFrame to Excel with sheet name 'Summary'.”
+“Drop duplicate rows based on 'email' column, keeping the last.”
+“Apply z-score normalization to numeric columns.”
