@@ -7,7 +7,7 @@ import os
 import ollama
 
 
-json_file_path = "/home/nathan.varner/Documents/dsc360/lab04/pandas_help_corpus.json"
+json_file_path = "/home/nathan.varner/Downloads/RAG-pipeline-for-pandas-main/pandas_help_corpus.json"
 def buildIndex(model):
     embeddings = []
     with open(json_file_path, 'r') as file:
@@ -30,18 +30,27 @@ def buildIndex(model):
         with open("index/metadata.json", "w") as f:
             json.dump(metadata, f, indent = 2)
 def search(query: str) -> str:
+    answer =""
     with open("index/metadata.json", "r") as f:
         metadata = json.load(f)
     embeddings = np.load("index/embeddings.npy")
     with open(json_file_path, 'r') as file:
         chunks = json.load(file)
-    k = 1
+    k = 3
+    similarityThreshhold= .35
     resp = embed(model=metadata["model"], input=query)
     qVector = np.array(resp["embeddings"][0], dtype=np.float32)
     qVector /= np.linalg.norm(qVector)
     scores = np.dot(embeddings, qVector)
     topK = np.argsort(scores)[-k:][::-1]
-    answer = chunks[topK[0]]["doc"]
+    if scores[topK[0]] >= similarityThreshhold:
+        answer += chunks[topK[0]]["doc"]
+        if scores[topK[1]] >=similarityThreshhold:
+            answer += chunks[topK[1]]["doc"]
+            if scores[topK[2]]>= similarityThreshhold:
+                answer += chunks[topK[2]]["doc"]
+    else: 
+        answer = "there is no very helpful info just tell there is insufficent info"
     #print(f"Answer: {answer}\n")
     return query + "||helpful info: " + answer
 def query_ollama(prompt: str, model: str) -> str:
